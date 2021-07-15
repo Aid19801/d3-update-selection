@@ -10,17 +10,6 @@ function formatter(row) {
 
 var tooltip = d3.select("body").append("div").classed("tooltip", true);
 
-function showTooltip(d) {
-  tooltip.style("opacity", 1).style("left", d.balance).style("top", d.savings)
-    .html(`
-    <p>${d.first_name} ${d.last_name}</p>
-    <p>Savings: $${d.savings.toLocaleString()}</p>
-    <p>Balance: $${d.balance.toLocaleString()}</p>
-    <p>Country: ${d.country}</p>
-    <p>Year: ${d.year}</p>
-  `);
-}
-
 function hideTooltip(d) {
   return tooltip.style("opacity", 0);
 }
@@ -102,27 +91,48 @@ d3.queue()
     circles
       .enter()
       .append("circle")
-      .on("mousemove", (d) => {
-        showTooltip(d);
-      })
-      .on("mouseout", (d) => {
-        hideTooltip(d);
-      })
-      .transition("ease-in")
-      .duration(400)
-      .attr("cx", (d) => xScale(d.balance))
-      .attr("cy", (d) => yScale(d.savings))
-      .attr("r", (d) => rScale(d.age))
-      .style("opacity", 1)
       .attr("stroke-width", 1)
       .attr("stroke", "black")
-      .attr("fill", "green");
+      .on("mousemove touchmove", (d) => {
+        showTooltip(d);
+      })
+      .on("mouseout touchend", (d) => {
+        hideTooltip(d);
+      })
+      .attr("fill", "grey")
+      .transition()
+      .duration(300)
+      .delay((d, i) => i * 20)
+      .attr("cx", (d) => xScale(d.balance))
+      .attr("cy", (d) => yScale(d.savings))
+      .attr("r", (d) => rScale(d.age));
 
     d3.select("svg")
       .selectAll("circle")
       .transition("ease-in")
       .duration(600)
       .delay((d, i) => i * 10);
+
+    // TOOLTIP LOGIC
+    function showTooltip(d) {
+      console.log("d", d);
+      tooltip
+        .style("opacity", 1)
+        .style(
+          "left",
+          () => `${d3.event.pageX - tooltip.node().offsetWidth / 2}px`
+        )
+        .style(
+          "top",
+          () => `${d3.event.pageY - tooltip.node().offsetHeight - 10}px`
+        ).html(`
+          <p>${d.first_name} ${d.last_name}</p>
+          <p>Savings: $${d.savings.toLocaleString()}</p>
+          <p>Balance: $${d.balance.toLocaleString()}</p>
+          <p>Country: ${d.country}</p>
+          <p>Year: ${d.year}</p>
+        `);
+    }
     // CHANGING DATA
     input.on("change", () => {
       var newYear = d3.event.target.value;
@@ -141,16 +151,16 @@ d3.queue()
         .append("circle")
         .attr("stroke-width", 1)
         .attr("stroke", "black")
-        .on("mousemove", (d) => {
+        .on("mousemove touchmove", (d) => {
           showTooltip(d);
         })
-        .on("mouseout", (d) => {
+        .on("mouseout touchend", (d) => {
           hideTooltip(d);
         })
-        .attr("fill", "green")
+        .attr("fill", "grey")
         .merge(circles)
         .transition()
-        .duration(500)
+        .duration(300)
         .delay((d, i) => i * 20)
         .attr("cx", (d) => xScale(d.balance))
         .attr("cy", (d) => yScale(d.savings))
