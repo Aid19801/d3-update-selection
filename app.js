@@ -18,8 +18,6 @@ d3.queue()
   .defer(d3.csv, "./data.csv", formatter)
   .await((err, data) => {
     if (err) console.log(err);
-    console.log("data ", data[0]);
-
     // 1. SETUP SVG WITH AXIS
     var height = 500;
     var width = 600;
@@ -115,7 +113,6 @@ d3.queue()
 
     // TOOLTIP LOGIC
     function showTooltip(d) {
-      console.log("d", d);
       tooltip
         .style("opacity", 1)
         .style(
