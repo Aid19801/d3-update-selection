@@ -1,2 +1,38 @@
+
+ON LOAD
 1. define sel, selectAll, data
-2. enter append 
+2. enter append, on events, attr styles, transitions, r/cx/cy positioning
+
+ON CHANGE
+1. define sel, selectAll, data [same]
+2. exit, transition, duration, r/cx/cy positioning, remove
+3. enter append, on events, attr styles, MERGE, 
+
+// EXAMPLE FROM COURSE OF AN UPDATE SECTION WITH MERGE
+var update = svg.selectAll('circle')
+                .data(data, d => d.region);
+                
+update
+.exit()
+.transition()
+    .duration(500)
+    .attr('r', 0)
+.remove();
+
+update
+.enter()
+.append('circle')
+    .on('mousemove touchmove', showTooltip)
+    .on('mouseout touchend', hideTooltip)
+    .attr('cx', d => xScale(d.co2 / d.population))
+    .attr('cy', d => yScale(d.methane / d.population))
+    .attr('stroke', 'white')
+    .attr('stroke-width', 1)
+.merge(update)
+    .transition()
+    .duration(500)
+    .delay((d, i) => i * 5)
+    .attr('cx', d => xScale(d.co2 / d.population))
+    .attr('cy', d => yScale(d.methane / d.population))
+    .attr('fill', d => fScale(d.renewable))
+    .attr('r', d => rScale(d.urban / d.population));

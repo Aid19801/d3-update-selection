@@ -89,14 +89,14 @@ d3.queue()
     circles
       .enter()
       .append("circle")
-      .attr("stroke-width", 1)
-      .attr("stroke", "black")
       .on("mousemove touchmove", (d) => {
         showTooltip(d);
       })
       .on("mouseout touchend", (d) => {
         hideTooltip(d);
       })
+      .attr("stroke-width", 1)
+      .attr("stroke", "black")
       .attr("fill", "grey")
       .transition()
       .duration(300)
@@ -105,11 +105,11 @@ d3.queue()
       .attr("cy", (d) => yScale(d.savings))
       .attr("r", (d) => rScale(d.age));
 
-    d3.select("svg")
-      .selectAll("circle")
-      .transition("ease-in")
-      .duration(600)
-      .delay((d, i) => i * 10);
+    // d3.select("svg")
+    //   .selectAll("circle")
+    //   .transition("ease-in")
+    //   .duration(600)
+    //   .delay((d, i) => i * 10);
 
     // TOOLTIP LOGIC
     function showTooltip(d) {
@@ -146,16 +146,15 @@ d3.queue()
       circles
         .enter()
         .append("circle")
-        .attr("stroke-width", 1)
-        .attr("stroke", "black")
         .on("mousemove touchmove", (d) => {
           showTooltip(d);
         })
         .on("mouseout touchend", (d) => {
           hideTooltip(d);
         })
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
         .attr("fill", "grey")
-        .merge(circles)
         .transition()
         .duration(300)
         .delay((d, i) => i * 20)
